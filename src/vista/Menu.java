@@ -1,12 +1,45 @@
 package vista;
 
 import javax.swing.JOptionPane;
+import javax.swing.ImageIcon;
+import javax.imageio.ImageIO;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentAdapter;
+import java.io.IOException;
 
 public class Menu extends javax.swing.JFrame {
+
+    // Declaración de constantes para las rutas de recursos
+    private static final String FONDO_MENU_IMG_PATH = "/imagenes/FondoMenu.png";
+
+    // Declaración de variable static
+    private static BufferedImage imgOriginal2;
 
     public Menu() {
         setUndecorated(true); // Asegúrate de llamarlo antes de initComponents()
         initComponents();
+        // Configurar la imagen de lblFondo usando la constante
+        try {
+            imgOriginal2 = ImageIO.read(Menu.class.getResource(FONDO_MENU_IMG_PATH));
+        } catch (IOException ex) {
+            // Manejar la excepción
+            System.out.println("Error al intentar leer la imagen en la ruta: " + FONDO_MENU_IMG_PATH);
+            System.out.println("Mensaje de error: " + ex.getMessage());
+        }
+        // Configurar la imagen de lblFondo usando la constante
+        lblFondo.setIcon(new ImageIcon(getClass().getResource(FONDO_MENU_IMG_PATH)));
+
+        // Configurar redimensionamiento de imagen
+        lblFondo.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent evt) {
+                System.out.println("lblFondo redimensionado");  // Verificación
+                ajustarImagen();
+            }
+        });
+        // Ajustar imagen al inicio
+        ajustarImagen();
     }
 
     /**
@@ -24,6 +57,7 @@ public class Menu extends javax.swing.JFrame {
         btnBuscarProducto = new javax.swing.JButton();
         btnSalidaProducto = new javax.swing.JButton();
         btnStock = new javax.swing.JButton();
+        lblFondo = new javax.swing.JLabel();
         btnSalir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -106,26 +140,27 @@ public class Menu extends javax.swing.JFrame {
                         .addGap(153, 153, 153)
                         .addComponent(lblMenu)))
                 .addContainerGap(53, Short.MAX_VALUE))
+            .addComponent(lblFondo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(46, 46, 46)
+                .addComponent(lblFondo, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(45, 45, 45)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnSalidaProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnIngresoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnKardex, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnStock, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnBuscarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(66, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnIngresoProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSalidaProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnKardex, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnStock, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnBuscarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(66, 66, 66))
         );
 
         pack();
@@ -192,7 +227,6 @@ public class Menu extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
-
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -204,6 +238,18 @@ public class Menu extends javax.swing.JFrame {
         });
     }
 
+    public void ajustarImagen() {
+
+        int ancho = lblFondo.getWidth();
+        int alto = lblFondo.getHeight();
+
+        Image imgRedimensionada = imgOriginal2.getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+        ImageIcon icono = new ImageIcon(imgRedimensionada);
+
+        lblFondo.setIcon(icono);
+
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscarProducto;
     private javax.swing.JButton btnIngresoProducto;
@@ -211,6 +257,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JButton btnSalidaProducto;
     private javax.swing.JButton btnSalir;
     private javax.swing.JButton btnStock;
+    private javax.swing.JLabel lblFondo;
     private javax.swing.JLabel lblMenu;
     // End of variables declaration//GEN-END:variables
 }
